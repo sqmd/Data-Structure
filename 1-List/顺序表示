@@ -1,0 +1,91 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define LIST_INIT_SIZE 100
+#define LISTINCREMENT 10
+#define ElemType int
+typedef struct{
+	ElemType *elem; //存储空间基址，即线性表的基地址
+	int length;//当前长度
+	int listsize;//当前分配的存储容量
+}SqList;
+
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int Status;
+
+//构造一个空的顺序表
+Status InitList_Sq(SqList &L){//C++引用
+	L.elem = (ElemType *)malloc(LIST_INIT_SIZE * sizeof(ElemType));
+	if (!L.elem) exit(OVERFLOW);
+
+	L.length = 0;
+	L.listsize = LIST_INIT_SIZE;
+	return OK;
+}
+
+//在第i个位置前插入e
+Status ListInsert_Sq(SqList L, int i, ElemType e){
+	if (i<1 || i>L.length + 1) return ERROR;
+	if (L.length >= L.listsize){
+		ElemType *newbase;
+		newbase = (ElemType *)realloc(L.elem, (L.listsize + LISTINCREMENT)*sizeof(ElemType));
+		if (!newbase) exit(OVERFLOW);
+		L.elem = newbase;
+		L.listsize += LISTINCREMENT;
+	}
+
+	ElemType *q, *p;
+	q = &(L.elem[i - 1]);
+	for (p = &(L.elem[L.length - 1]); p >=q; --p)	*(p + 1) = *p;
+	*q = e;
+	++L.length;
+	return OK;	
+}
+
+//删除第i个元素，返回到e中
+Status ListDelete_sq(SqList &L, int i, ElemType &e){
+	if (i<1 || i>L.length) return ERROR;
+
+	ElemType *p, *q;
+	p = &(L.elem[i - 1]);
+	e = *p;
+	//for (q = p; q <= &(L.elem[L.length - 1]); q++)	*p = *(p + 1);
+	q = L.elem + L.length - 1;//表尾元素位置----------------------------------------------------------------------------------1
+	/*
+		int a[5] = { 1, 2, 3, 4, 5 };	
+		printf("%d\n", a+1);//9435952
+		printf("%d\n", a);//9435948 相差4
+	*/
+	for (++p; p <= q; ++p)	*(p - 1) = *p;
+	--L.length;
+	return OK;
+}
+
+//查找第1个 与e满足compare() 的元素位序 1,2,3...
+int LocateElem_Sq(SqList L, ElemType e, Status(*compare)(ElemType, ElemType)){//函数指针----------------------------------------------------------------------------------2
+	int i = 1;
+	ElemType *p = L.elem;
+	while (i <= L.length && !(*compare)(*p++, e)) ++i; //函数指针----------------------------------------------------------------------------------3
+	if (i <= L.length) return i;
+	else return 0;
+}
+
+//La,Lb(合并)非递减排列
+void MergeList_Sq(SqList La, SqList Lb, SqList &Lc){
+	ElemType *pa = La.elem, *pb = Lb.elem;
+	Lc.listsize = Lc.length = La.length + Lb.length;
+	ElemType *pc = Lc.elem = (ElemType *)malloc(Lc.listsize*sizeof(ElemType));
+	if (!Lc.elem) exit(OVERFLOW);
+
+	ElemType *pa_last = La.elem + La.length - 1, *pb_last = Lb.elem + Lb.length - 1;
+	while (pa <= pa_last && pb <= pb_last){
+		if (*pa <= *pb) *pc++ = *pa++;
+		else *pc++ = *pb++;
+	}
+	while (pa <= pa_last) *pc++ = *pa++;
+	while (pb <= pb_last) *pc += *pb++;
+}
