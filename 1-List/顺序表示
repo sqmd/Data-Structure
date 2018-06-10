@@ -15,7 +15,7 @@ typedef struct{
 #define TRUE 1
 #define FALSE 0
 #define OVERFLOW 3
-typedef int Status;
+typedef Status int;
 
 //构造一个空的顺序表
 Status InitList_Sq(SqList &L){//C++引用
