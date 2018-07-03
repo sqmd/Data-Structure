@@ -3,7 +3,8 @@
 
 #define LIST_INIT_SIZE 100
 #define LISTINCREMENT 10
-#define ElemType int
+typedef int ElemType;
+typedef int Status;
 typedef struct{
 	ElemType *elem; //存储空间基址，即线性表的基地址
 	int length;//当前长度
@@ -15,7 +16,6 @@ typedef struct{
 #define TRUE 1
 #define FALSE 0
 #define OVERFLOW 3
-typedef int Status;//typedef int Status  //指定标识符Status代表int类型
 
 //构造一个空的顺序表
 Status InitList_Sq(SqList &L){//C++引用
