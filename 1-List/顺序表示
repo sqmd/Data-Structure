@@ -69,7 +69,7 @@ Status ListDelete_sq(SqList &L, int i, ElemType &e){
 int LocateElem_Sq(SqList L, ElemType e, Status(*compare)(ElemType, ElemType)){//函数指针----------------------------------------------------------------------------------2
 	int i = 1;
 	ElemType *p = L.elem;
-	while (i <= L.length && !(*compare)(*p++, e)) ++i; //函数指针----------------------------------------------------------------------------------3
+	while (i <= L.length && !(*compare)(*p++, e)) ++i;//  //函数指针----------------------------------------------------------------------------------3
 	if (i <= L.length) return i;
 	else return 0;
 }
@@ -77,11 +77,12 @@ int LocateElem_Sq(SqList L, ElemType e, Status(*compare)(ElemType, ElemType)){//
 //La,Lb(合并)非递减排列
 void MergeList_Sq(SqList La, SqList Lb, SqList &Lc){
 	ElemType *pa = La.elem, *pb = Lb.elem;
-	Lc.listsize = Lc.length = La.length + Lb.length;
+	Lc.listsize = Lc.length = La.length + Lb.length;//Lc.listsize 
 	ElemType *pc = Lc.elem = (ElemType *)malloc(Lc.listsize*sizeof(ElemType));
 	if (!Lc.elem) exit(OVERFLOW);
 
 	ElemType *pa_last = La.elem + La.length - 1, *pb_last = Lb.elem + Lb.length - 1;
+	
 	while (pa <= pa_last && pb <= pb_last){
 		if (*pa <= *pb) *pc++ = *pa++;
 		else *pc++ = *pb++;
