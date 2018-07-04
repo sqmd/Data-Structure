@@ -1,0 +1,104 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef int ElemType;
+typedef struct LNode{
+	ElemType data;
+	struct LNode *next;
+}LNode,*LinkList;
+
+typedef int Status;
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+
+//查找第i个元素e   i=1,2,3...
+//L有头结点
+Status GetElem_L(LinkList L, int i, ElemType &e){
+	LinkList p = L->next;
+	int j = 1;
+
+	//p->b 的含义是 (*p).b       结构体A.b	结构体指针p->b
+	while (p && j<i){//
+		p = p->next;
+		j++;
+	}
+	if (!p || j>i) return ERROR;//i的取值
+	e = p->data;
+	return OK;
+}
+
+//第i个前插入 i=1,2,3...
+Status ListInsert_L(LinkList &L, int i, ElemType e){
+	LinkList p = L;
+	int j = 0;
+
+	while (p && j < i - 1){//
+		p = p->next;
+		j++;
+	}	
+	if (!p || j>i - 1) return ERROR; //i的取值
+
+	LinkList q = (LinkList)malloc(sizeof(LNode));
+	q->data = e;
+	q->next = p->next;
+	p->next = q;
+	return OK;
+}
+
+//删除第i个元素e
+Status ListDelete_L(LinkList &L, int i, ElemType &e){
+	LinkList p = L;
+	int j = 0;
+	while (p->next && j < i-1){//p->next p为第i个元素前驱
+		p = p->next;
+		j++;
+	}
+	if (!(p->next) || j>i - 1) return ERROR;
+
+	LinkList q = p->next;
+	p->next = q->next;
+	e = q->data;
+	free(q);
+	return OK;
+}
+
+//逆序输入n个元素，建立带表头链表
+void CreateList_L(LinkList &L, int n){
+	//LinkList p = L;
+	L = (LinkList)malloc(sizeof(LNode));
+	L->next = NULL;
+
+	for (int i = n; i >0; i--){
+		LinkList q = (LinkList)malloc(sizeof(LNode));
+		scanf("%d", &q->data);
+		q->next = L->next;
+		L->next = q;
+	}
+}
+
+//两个有序链表合并（非递减排列）
+void MergeList_L(LinkList &La, LinkList &Lb, LinkList &Lc){
+	LinkList a = La->next, b = Lb->next;
+	LinkList c = Lc=La;//
+
+	while (a&&b){
+		if (a->data <= b->data){
+			c->next = a;
+			c = a;//c = c->next;
+			a = a->next;
+		}
+		else{
+			c->next = b; 
+			c = b;
+			b = b->next;
+		}		
+	}
+
+	//while (a)	c->next = a;
+	//while (b)	c->next = b;
+	c->next = a ? a : b;//
+	free(Lb);//
+}
