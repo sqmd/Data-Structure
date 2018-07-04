@@ -39,8 +39,8 @@ Status ListInsert_Sq(SqList L, int i, ElemType e){
 	}
 
 	ElemType *q, *p;
-	q = &(L.elem[i - 1]);
-	for (p = &(L.elem[L.length - 1]); p >=q; --p)	*(p + 1) = *p;
+	q = &(L.elem[i - 1]);//
+	for (p = &(L.elem[L.length - 1]); p >=q; --p)	*(p + 1) = *p;//
 	*q = e;
 	++L.length;
 	return OK;	
