@@ -1,0 +1,49 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int ElemType;
+typedef int Status;
+
+typedef struct DuLnode{
+	ElemType data;
+	struct DuLnode *prior;
+	struct DuLnode *next;
+}DuLnode,*DuLinkList;
+
+//带头结点，双向循环链表
+//第i个位置之前插入，i=1,2,3...
+Status ListInsert_DuL(DuLinkList &L, int i, ElemType e){
+	/*
+	DuLinkList p = L;
+	for (int j = 0; j <= i; j++){
+		p = p->next;
+	}
+	*/
+	DuLinkList p;
+	if (!(p = GetElemP_DuL(L, i))) return ERROR;
+
+	DuLinkList in = (DuLinkList)malloc(sizeof(DuLnode));
+	if (!in) return ERROR;
+	in->data = e;
+
+	in->prior = p->prior;	p->prior->next = in;
+	in->next = p;	p->prior = in;
+	return OK;
+}
+
+Status ListDelete_DuL(DuLinkList &L, int i, ElemType &e){
+	DuLinkList p;
+	if (!(p = GetElemP_DuL(L, i))) return ERROR;
+
+	e = p->data;
+
+	p->prior->next = p->next;
+	p->next->prior = p->prior;
+	free(p);
+	return OK;
+}
