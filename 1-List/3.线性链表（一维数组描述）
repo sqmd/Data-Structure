@@ -1,0 +1,95 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int ElemType;
+typedef int Status;
+
+
+#define MAXSIZE 1000
+typedef struct{
+	ElemType data;
+	int cur;
+}component,SLinkList[MAXSIZE];//
+
+//线性链表（一维数组描述）
+//----------------------------------------------------space[0].cur指向不明，时而为头结点，时而为备用链表----
+
+//-------------------------------------------space[0].cur为头结点---------------------
+//查找e位序(1,2,3...)，找不到返回0
+int LocateElem_SL(SLinkList S, ElemType e){
+	int i = S[0].cur;
+	while (i && S[i].data != e) i = S[i].cur;
+	return i;
+}
+
+//--------------------------------------------space[0].cur为备用链表------------------
+//有备用链表,生成的为备用链表
+void InitSpace_SL(SLinkList &space){
+	for (int i = 0; i < MAXSIZE - 1;i++){
+		space[i].cur = i + 1;
+	}
+	space[MAXSIZE - 1].cur = 0;
+}
+
+//返回分配的结点下标，否则为0
+int Malloc_SL(SLinkList &space){
+	int i = space[0].cur;
+	if (space[i].cur) space[0].cur = space[i].cur;
+	return i;
+}
+
+//回收下标为k结点
+void Free_SL(SLinkList &space, int k){//
+	space[k].cur = space[0].cur;
+	space[0].cur = k;
+}
+
+//--------------------------S为头指针，space[0].cur为备用链表头指针。两个链表结尾指针都为0。  （P34图片）----------------------------
+//依次输入集合A,B元素，建立 (A-B)并(B-A)  
+//假设备用空间足够大
+void difference(SLinkList &space, int &S){
+	InitSpace_SL(space);
+	S = Malloc_SL(space);//头结点------
+	int r = S;//r最终为尾结点--------------------------
+
+	int m, n;
+	scanf("%d", &m);//A元素个数
+	scanf("%d", &n);
+	
+	for (int j = 1; j <= m; j++){
+		int i = Malloc_SL(space);
+		scanf("%d", &space[i].data);
+
+		space[r].cur = i;
+		r = i;
+	}
+	space[r].cur = 0;
+
+	for (int j = 1; j <= n; j++){//B在A中，删除；B不在A中，添加
+		int b;
+		scanf("%d", &b);
+
+		int p = S;//头结点
+		int k = space[S].cur;//第一个
+		while (k!= space[r].cur && space[k].data != b){
+			p = k;//删除的话需要前驱
+			k = space[k].cur;
+		}
+		if (k == space[r].cur){//B不在A中，添加
+			int i = Malloc_SL(space);
+			space[i].data = b;
+
+			space[i].cur = space[r].cur;//r
+			space[r].cur = i;
+		}else{//B在A中，删除
+			space[p].cur = space[k].cur;
+			Free_SL(space, k);
+			if (r == k) r = p;//
+		}
+	}
+}
