@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<stdlib.h>
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int ElemType;
+typedef int Status;
+
+//带头结点
+
+//结点类型
+typedef struct LNode{
+	ElemType data;
+	struct LNode *next;
+}*Link,*Position;
+
+//链表类型
+typedef struct{
+	Link head, tail;//结点类型
+	int len;
+}LinkList;
+
+//函数声明......
