@@ -1,0 +1,49 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int QElemType;
+typedef int Status;
+
+#define MAXQSIZE 100
+typedef struct{
+	QElemType *base;
+	int front;
+	int rear;
+}SqQueue;
+
+Status InitQueue(SqQueue &Q){
+	Q.base = (QElemType *)malloc(sizeof(QElemType)*MAXQSIZE);
+	if (!Q.base) exit(OVERFLOW);
+	Q.front = Q.rear = 0;
+	return OK;
+}
+
+int QueueLength(SqQueue Q){
+	return (Q.rear - Q.front + MAXQSIZE) % MAXQSIZE;
+	/*
+		情况一:  当rear大于front时，循环队列的长度：rear-front
+		情况二:  当rear小于front时，循环队列的长度:分为两部分计算 0+rear   和   Quesize-front  ,  将两部分的长度合并到一起即为: rear-front+Quesize
+	*/
+}
+
+//插入e
+Status EnQueue(SqQueue &Q, QElemType e){	
+	if ((Q.rear + 1) % MAXQSIZE == Q.front) return ERROR;//队列满
+	Q.base[Q.rear] = e;
+	Q.rear = (Q.rear + 1) % MAXQSIZE;
+	return OK;
+}
+
+//删除
+Status DeQueue(SqQueue &Q, QElemType &e){
+	//if ((Q.front + 1) % MAXQSIZE == Q.rear) return ERROR;//队列空
+	if (Q.front == Q.rear) return ERROR;//
+	e = Q.base[Q.front];
+	Q.front = (Q.front + 1) % MAXQSIZE;
+	return OK;
+}
