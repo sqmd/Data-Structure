@@ -14,7 +14,7 @@ typedef struct{
 	int length;
 }HString;
 
-//在S的第pos个字符之前插入T..................................................................
+//在S的第pos个字符之前插入T
 Status StrInsert(HString &S, int pos, HString T){
 	if (pos<1 || pos>S.length+1) return ERROR;
 
