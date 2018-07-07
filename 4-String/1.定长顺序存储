@@ -1,0 +1,45 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int ElemType;
+typedef int Status;
+
+#define MAXSTRLEN 255
+typedef unsigned char SString[MAXSTRLEN + 1];//SString[0]存放串的长度
+
+//串连接，结果放在T中
+Status Concat(SString &T, SString S1, SString S2){
+	int uncut;
+	if (S1[0] + S2[0] <= MAXSTRLEN){
+		T[0] = S1[0] + S2[0];
+		for (int i = 1; i <=S1[0]; i++) T[i] = S1[i];
+		for (int i = 1; i <= S2[0]; i++) T[i + S1[0]] = S2[i];
+		uncut=TRUE;
+	}
+	else if (S1[0] < MAXSTRLEN){ //S1+部分S2  //S1[0] + S2[0] > MAXSTRLEN &&
+		for (int i = 1; i <= S1[0]; i++) T[i] = S1[i];
+		for (int i = 1; i <= MAXSTRLEN - S1[0]; i++) T[i + S1[0]] = S2[i];
+		T[0] = MAXSTRLEN;
+		uncut = FALSE;
+	}
+	else{//only S1
+		for (int i = 0; i <= MAXSTRLEN; i++) T[i] = S1[i];
+		uncut = FALSE;
+	}
+	return uncut;
+}
+
+
+//求子串  子串Sub：S的第pos个字符起，长度为len
+Status SubString(SString &Sub, SString S, int pos, int len){
+	//if (pos<1 || pos + len - 1>MAXSTRLEN) return ERROR;
+	if (pos<1 || pos>S[0] || len<0 || len >S[0] - pos + 1) return ERROR;//pos>S[0] || len<0 
+	for (int i = 1; i <= len; i++) Sub[i] = S[i + pos-1];
+	Sub[0] = len;
+	return OK;
+}
