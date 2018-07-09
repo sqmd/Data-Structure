@@ -1,0 +1,69 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int ElemType;
+typedef int Status;
+
+#define MAXSIZE 12500
+typedef struct{
+	int i, j;
+	ElemType e;
+}Triple;
+typedef struct{
+	Triple data[MAXSIZE + 1];
+	int mu, nu, tu;//行数，列数，非0元个数
+}TSMatrix;
+
+//T：M的转置矩阵
+Status TransposeSMatrix(TSMatrix M, TSMatrix &T){
+	T.mu = M.nu;
+	T.nu = M.mu;
+	T.tu = M.tu;
+
+	if (T.tu){
+		int qq = 1;//
+		for (int col = 1; col <= T.mu; col++){
+			for (int p = 1; p <= T.tu; p++){
+				if (M.data[p].j == col){
+					T.data[qq].i = M.data[p].j;
+					T.data[qq].j = M.data[p].i;
+					T.data[qq].e = M.data[p].e;
+					qq++;
+				}
+			}
+		}
+	}
+	return OK;
+}
+
+//改进的转置方法，快速转置
+Status FastTransposeSMatrix(TSMatrix M, TSMatrix &T){
+	T.mu = M.nu;
+	T.nu = M.mu;
+	T.tu = M.tu;
+
+	if (T.tu){
+		int num[MAXSIZE] = { 0 }, cpot[MAXSIZE] = { 1 };
+		for (int a = 1; a <= M.tu; a++){
+			int jj = M.data[a].j;
+			num[jj]++;
+		}
+		for (int a = 2; a <= M.nu; a++){
+			cpot[a] = cpot[a - 1] + num[a - 1];
+		}
+
+		for (int a = 1; a <= T.tu; a++){			
+			int cc = cpot[M.data[a].j];
+			T.data[cc].i = M.data[a].j;
+			T.data[cc].j = M.data[a].i;
+			T.data[cc].e = M.data[a].e;
+			cpot[M.data[a].j]++;//
+		}
+	}
+	return OK;
+}
