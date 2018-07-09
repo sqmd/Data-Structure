@@ -1,0 +1,25 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int ElemType;
+typedef int Status;
+
+#define MAXSIZE 12500
+#define MAXRC 12500
+typedef struct{
+	int i, j;
+	ElemType e;
+}Triple;
+typedef struct{
+	Triple data[MAXSIZE + 1];
+	int rpos[MAXRC + 1];//与三元组顺序表不同的地方，多了一个这个。//各行第一个非零元的位置表
+	int mu, nu, tu;
+}RLSMatrix;
+
+
+//矩阵乘法未做
