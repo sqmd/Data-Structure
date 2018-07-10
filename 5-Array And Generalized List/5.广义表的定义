@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int ElemType;
+typedef int Status;
+
+
+typedef int AtomType;
+typedef int Status;
+
+//法一：-----------------------------------------------
+//原子结点：tag=0 atom
+//表结点：tag=1 hp tp
+typedef enum{ATOM,LIST}ELemTag;
+typedef struct GLNode{
+	ELemTag tag;
+	union{
+		AtomType atom;
+		struct{
+			struct GLNode *hp, *tp;
+		}ptr;
+	};
+}*GList;
+
+//法二：-----------------------------------------------
+//原子结点：tag=0 atom tp
+//表结点：tag=1 hp tp
+//多了一个tp(NULL)
+typedef enum{ATOM,LIST}ELemTag;
+typedef struct GLNode{
+	ELemTag tag;
+	union{
+		AtomType atom;
+		struct GLNode *hp;
+	};
+	struct GLNode *tp;
+}*GList;
