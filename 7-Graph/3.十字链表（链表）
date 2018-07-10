@@ -1,0 +1,51 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int ElemType;
+typedef int Status;
+
+typedef char InfoType;
+typedef int VertexType;
+
+#define MAX_VERTEX_NUM 20
+typedef struct ArcBox{//弧结点  P164 
+	int tailvex, headvex;
+	struct ArcBox *hlink, *tlink;
+	InfoType *info;
+}ArcBox;
+typedef struct VexNode{//顶点结点 表头
+	VertexType data;
+	ArcBox *firstin, *firstout;
+}VexNode;
+typedef struct{
+	VexNode xlist[MAX_VERTEX_NUM];
+	int vexnum, arcnum;//顶点数 弧数
+}OLGraph;
+
+//有向图
+Status CreateDG(OLGraph &G){
+	int IncInfo;
+	scanf("%d %d %d", &G.vexnum, &G.arcnum, &IncInfo);
+	for (int i = 0; i < G.vexnum; i++){
+		scanf("%d", &G.xlist[i].data);
+		G.xlist[i].firstin = NULL;
+		G.xlist[i].firstout = NULL;
+	}
+
+	for (int k = 0; k < G.arcnum; k++){
+		int v1, v2;
+		scanf("%d %d", &v1, &v2);
+		int i = LocateVex(G, v1);
+		int j = LocateVex(G, v2);
+
+		ArcBox *p = (ArcBox *)malloc(sizeof(ArcBox));
+		*p = { i, j, G.xlist[j].firstin, G.xlist[i].firstout, NULL };
+		G.xlist[j].firstin = G.xlist[i].firstout = p;
+		if (IncInfo) Input(*p->info);//书上写法 伪代码
+	}
+}
