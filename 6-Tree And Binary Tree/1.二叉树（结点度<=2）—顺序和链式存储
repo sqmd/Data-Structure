@@ -1,0 +1,18 @@
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int TElemType;
+typedef int Status;
+
+//顺序存储 P126
+#define MAX_TREE_SIZE 100
+typedef TElemType SqBiTree[MAX_TREE_SIZE];
+SqBiTree bt;
+
+//链式存储 二叉链表（三叉链表为：增加一个parent指针）
+typedef struct BiTNode{
+	TElemType data;
+	struct BiTNode *lchild, *rchild;
+}BiTNode,*BiTree;
