@@ -1,1 +1,65 @@
+#include<stdio.h>
+#include<stdlib.h>
 
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int ElemType;
+typedef int Status;
+
+typedef struct OLNode{
+	int i, j;
+	ElemType e;
+	struct OLNode *right, *down;
+}OLNode,*OLink;
+typedef struct{
+	OLink *rhead, *chead;//行 列头指针
+	int mu, nu, tu;
+}CrossList;
+
+Status CreateSMatrix_OL(CrossList &M){
+	if (M) free(M);//?
+
+	int m, n, t;
+	scanf("%d %d %d", &m, &n, &t);
+	M.mu = m; M.nu = n; M.tu = t;
+
+	M.rhead = (OLink *)malloc(sizeof(OLink)*(m+1));
+	if (!M.rhead) exit(OVERFLOW);
+	M.chead = (OLink *)malloc(sizeof(OLink)*(n+1));
+	if (!M.rhead) exit(OVERFLOW);
+	for (int a = 0; a <= m; a++) M.rhead[a] = NULL;
+	for (int a = 0; a <= n; a++) M.chead[a] = NULL;
+
+	int ii, jj, ee;
+	for (scanf("%d %d %d", &ii, &jj, &ee); ii != 0; scanf("%d %d %d", &ii, &jj, &ee)){
+		OLink p = (OLink)malloc(sizeof(OLNode));
+		if (!p) exit(OVERFLOW);
+		p->i = ii; p->j = jj; p->e = ee;
+
+		if (M.rhead[ii] == NULL || M.rhead[ii]->j > jj){//行插入
+			p->right = M.rhead[ii];
+			M.rhead[ii] = p;
+		}
+		else{
+			OLink q;
+			for (q = M.rhead[ii]; (q->right) && q->right->j < jj; q = q->right);
+			p->right = q->right;
+			q->right = p;
+		}
+
+		if (M.chead[jj] == NULL || M.chead[jj]->i>ii){
+			p->down = M.chead[jj];
+			M.chead[jj] = p;
+		}
+		else{
+			OLink q;
+			for (q = M.chead[jj]; (q->down) && q->down->i < ii; q = q->down);
+			p->down = q->down;
+			q->down = p;			
+		}
+	}
+	return OK;
+}
