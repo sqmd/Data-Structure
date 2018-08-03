@@ -1,0 +1,89 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define OK 1
+#define ERROR 0
+#define TRUE 1
+#define FALSE 0
+#define OVERFLOW 3
+typedef int Status;
+typedef int TElemType;
+
+typedef struct BiTNode{
+	TElemType data;
+	struct BiTNode *lchild, *rchild;
+}BiTNode, *BiTree;
+
+
+//先序遍历   递归
+//visit是对数据元素操作的应用函数
+Status PreOrderTraverse(BiTree T, Status(*Visit)(TElemType e)){
+	if (T){
+		if (Visit(T->data))
+			if (PreOrderTraverse(T->lchild,Visit))
+				if (PreOrderTraverse(T->rchild, Visit))
+					return OK;
+		
+		return ERROR;
+	}
+	else return OK;
+}
+
+//中序遍历 非递归
+//栈 
+//向左走到尽头，访问左节点q（根），q右边的节点入栈（右）？？？			根，右				。。。。。。。。。。。。。。。
+Status InOrderTraverse(BiTree T, Status(*Visit)(TElemType e)){
+	InitStack(S);
+	Push(S, T);
+	while (!StackEmpty(S)){
+		while (GetTop(S, p) && p) Push(S, p->lchild);
+		Pop(S, p);
+
+		if (!StackEmpty(S)){
+			Pop(S, p);
+			if (!Visit(p->data)) return ERROR;
+			Push(S, p->rchild);
+		}
+	}
+	return OK;
+}
+
+
+//中序遍历 非递归
+Status InOrderTraverse(BiTree T, Status(*Visit)(TElemType e)){
+	InitStack(S);
+	BiTree p = T;
+	while (p || !StackEmpty(S)){
+		if (p){
+			Push(S, p);
+			p = p->lchild;
+		}
+		else{
+			Pop(S, p);
+			if (!Visit(p->data)) return ERROR;
+			p = p->rchild;
+		}
+	}
+	return OK;
+}
+
+//按先序次序建立二叉树的二叉链表	递归
+Status CreateBiTree(BiTree &T){
+	char ch;
+	scanf("%c", &ch);
+	if (ch == ' ') T = NULL;
+	else{
+		if (!(T = (BiTNode *)malloc(sizeof(BiTNode)))) exit(OVERFLOW);
+		T->data = ch;
+		CreateBiTree(T->lchild);
+		CreateBiTree(T->rchild);
+	}
+	return OK;
+}
+
+
+
+
+
+
+
